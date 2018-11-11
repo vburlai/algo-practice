@@ -1,0 +1,23 @@
+{
+  "name": "algo-practice",
+  "version": "1.0.0",
+  "repository": "https://github.com/vburlai/algo-practice.git",
+  "author": "vburlai <vitalii.burlai@schibsted.com>",
+  "license": "MIT",
+  "private": true,
+  "engines": {
+    "node": ">=8.12.0",
+    "yarn": ">=1.10.1"
+  },
+  "devDependencies": {
+    "jest": "^23.6.0"
+  },
+  "scripts": {
+    "start": "jest",
+    "dev": "jest --watch"
+  },
+  "prettier": {
+    "singleQuote": true,
+    "semi": false
+  }
+}
