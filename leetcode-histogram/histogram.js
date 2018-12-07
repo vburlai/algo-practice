@@ -6,30 +6,27 @@
 var largestRectangleArea = function(heights) {
   let stack = []
 
-  let res = 0
-  let i = 0
-  const len = heights.length
-  while (i < len) {
-    if (!stack.length || heights[i] >= heights[stack[stack.length - 1]]) {
-      stack.push(i++)
-    } else {
-      const min = stack.pop()
-      const width = stack.length ? i - stack[stack.length - 1] - 1 : i
-      const area = heights[min] * width
-      if (area > res) {
-        res = area
-      }
+  let result = 0
+  const newResult = (height, stack, end) => {
+    let len = end
+    if (stack.length) {
+      len = end - stack[stack.length - 1] - 1
     }
+    const area = len * height
+    return area > result ? area : result
+  }
+
+  for (let i = 0; i < heights.length; i++) {
+    while (stack.length && heights[i] < heights[stack[stack.length - 1]]) {
+      result = newResult(heights[stack.pop()], stack, i)
+    }
+    stack.push(i)
   }
 
   while (stack.length) {
-    const min = stack.pop()
-    const width = stack.length ? i - stack[stack.length - 1] - 1 : i
-    const area = heights[min] * width
-    if (area > res) {
-      res = area
-    }
+    result = newResult(heights[stack.pop()], stack, heights.length)
   }
-  return res
+
+  return result
 }
 module.exports = largestRectangleArea
