@@ -4,14 +4,12 @@
  * @return {number[][]}
  */
 var getSkyline = function(buildings) {
-  let result = []
+  let result = new Map()
   let level = 0
-  let stack = []
+  let set = new Set()
 
-  const queue = buildings.reduce(
-    (acc, b, i) => [...acc, [b[0], i], [b[1], i]],
-    []
-  )
+  const queue = []
+  buildings.forEach((b, i) => queue.push([b[0], i], [b[1], i]))
   // sort by coord ASC and height DESC (helps glue gaps of 0)
   queue.sort((a, b) => (a[0] === b[0] ? b[1] - a[1] : a[0] - b[0]))
 
@@ -23,31 +21,41 @@ var getSkyline = function(buildings) {
 
     if (coord === building[0]) {
       // start
-      stack.push(ind)
+      set.add(ind)
       if (height > level) {
         level = height
       }
     } else {
       // end
-      stack = stack.filter(el => el !== ind)
-      level = stack.reduce(
-        (acc, el) => (buildings[el][2] > acc ? buildings[el][2] : acc),
-        0
-      )
+      set.delete(ind)
+      level = 0
+      for (let el of set.values()) {
+        const h = buildings[el][2]
+        if (h > level) {
+          level = h
+        }
+      }
     }
 
-    result.push([coord, level])
+    result.set(coord, level)
   }
 
-  const gluedResults = result.reduce((acc, res) => {
-    if (acc.length && acc[acc.length - 1][0] === res[0]) {
-      return [...acc.slice(0, -1), res]
+  const gluedResults = []
+  let prevRes
+  for (let i of result.keys()) {
+    const res = result.get(i)
+    let add = true
+    if (i > 0) {
+      if (prevRes === res) {
+        add = false
+      }
     }
-    if (acc.length && acc[acc.length - 1][1] === res[1]) {
-      return acc
+
+    prevRes = res
+    if (add) {
+      gluedResults.push([i, res])
     }
-    return [...acc, res]
-  }, [])
+  }
 
   return gluedResults
 }
