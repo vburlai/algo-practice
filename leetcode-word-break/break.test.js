@@ -8,6 +8,11 @@ describe('leetcode-word-break', () => {
       s: 'catsandog',
       dict: ['cats', 'dog', 'sand', 'and', 'cat'],
       result: false
+    },
+    {
+      s: 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab',
+      dict: ['a', 'aa', 'aaa', 'aaaa', 'aaaaa', 'aaaaaa', 'aaaaaaa', 'aaaaaaaa', 'aaaaaaaaa', 'aaaaaaaaaa'],
+      result: false
     }
   ].forEach(({ s, dict, result }) => {
     test(`wordBreak('${s}', ${JSON.stringify(dict)}) === ${result}`, () => {
