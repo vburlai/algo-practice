@@ -6,74 +6,43 @@
  * @return {string}
  */
 var minWindow = function(s, t) {
+  let start = 0, end = 0, counts = {}, matches = 0
+  let needed = {}
   if (!s.length || !t.length) {
     return ''
   }
 
-  const req = t.split('').reduce((acc, c) => {
-    acc[c] = (acc[c] || 0) + 1
-    return acc
-  }, {})
+  t.split('').forEach(c => needed[c] = (needed[c] || 0) + 1)
+  const len = s.length, nlen = Object.keys(needed).length
+  
+  let res = '', rlen = Infinity
 
-  const reqKeysLength = Object.keys(req).length
-
-  const ind = s
-    .split('')
-    .reduce((acc, c, i) => (c in req ? acc.concat([i]) : acc), [])
-
-  if (!ind.length) {
-    return ''
-  }
-
-  const count = (i, j) => {
-    let res = {}
-    for (let k = i; k <= j; k++) {
-      const c = s[ind[k]]
-      res[c] = (res[c] || 0) + 1
-    }
-    return res
-  }
-
-  const satisfiesChar = (c, counts) => counts[c] >= req[c]
-  const satisfiesReq = counts =>
-    Object.keys(req).filter(c => satisfiesChar(c, counts)).length
-
-  let start
-  let end
-  let found = false
-
-  for (let len = t.length; len <= ind.length; len++) {
-    let counts
-    let satisfied
-    for (let i = 0; i <= ind.length - len; i++) {
-      if (i === 0) {
-        counts = count(i, i + len - 1)
-        satisfied = satisfiesReq(counts)
-      } else {
-        const cRem = s[ind[i - 1]]
-        counts[cRem]--
-        if (counts[cRem] === req[cRem] - 1) {
-          satisfied--
-        }
-
-        const cAdd = s[ind[i + len - 1]]
-        counts[cAdd] = (counts[cAdd] || 0) + 1
-        if (counts[cAdd] === req[cAdd]) {
-          satisfied++
+  while (end < len) {
+    while (end < len && matches < nlen) {
+      const c = s[end++]
+      if (c in needed) {
+        counts[c] = (counts[c] || 0) + 1
+        if (counts[c] === needed[c]) {
+          matches++
         }
       }
-
-      if (satisfied === reqKeysLength) {
-        if (!found || ind[i + len - 1] - ind[i] <= end - start) {
-          start = ind[i]
-          end = ind[i + len - 1]
-          found = true
+    }
+    while (matches === nlen) {
+      if (rlen > (end - start + 1)) {
+        rlen = end - start + 1
+        res = s.substring(start, end)
+      }
+      const c = s[start++]
+      if (c in needed) {
+        if (counts[c] === needed[c]) {
+          matches--
         }
+        counts[c] = counts[c] - 1
       }
     }
   }
 
-  return found ? s.substring(start, end + 1) : ''
+  return res
 }
 
 module.exports = minWindow
