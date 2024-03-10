@@ -6,21 +6,21 @@
  * @return {number[]}
  */
 var twoSum = function(nums, target) {
-  if (nums.length < 2) {
-    return []
-  }
+    const map = new Map(); // target - val => pos
 
-  var hashMap = {}
-  for (var i = 0; i < nums.length; i++) {
-    const secondElement = target - nums[i]
-    if (secondElement in hashMap) {
-      return [hashMap[secondElement], i]
+    for (let i = 0; i < nums.length; i++) {
+        const n = nums[i];
+        if (map.has(n)) {
+            return [map.get(n), i];
+        }
+        map.set(target - n, i);
     }
+};
 
-    hashMap[nums[i]] = i
-  }
-
-  return []
-}
+// nums = [2,7,11,15]
+// target = 9
+// map {
+//   7 => 0
+// }
 
 module.exports = twoSum
