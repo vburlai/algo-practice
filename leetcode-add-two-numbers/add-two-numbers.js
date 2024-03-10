@@ -5,11 +5,6 @@ function ListNode(val, next) {
     this.val = (val === undefined ? 0 : val)
     this.next = (next === undefined ? null : next)
 }
-
-var sumAndC = (a, b, c) => {
-    const v = a + b + c;
-    return v < 10 ? [v, 0] : [v - 10, 1];
-};
 /**
  * @param {ListNode} l1
  * @param {ListNode} l2
@@ -24,7 +19,13 @@ var addTwoNumbers = function (l1, l2) {
     while (p1 !== null || p2 !== null || c !== 0) {
         const v1 = p1 === null ? 0 : p1.val;
         const v2 = p2 === null ? 0 : p2.val;
-        ([sum, c] = sumAndC(v1, v2, c));
+        let sum = v1 + v2 + c;
+        if (sum < 10) {
+            c = 0;
+        } else {
+            c = 1;
+            sum -= 10;
+        }
         const n = new ListNode(sum, null);
         p.next = n;
         p = n;
